@@ -171,15 +171,15 @@ Using `imagePullPolicy: Always` ensures the cluster always pulls the latest imag
 
 ## Screenshots
 ### Application Running
-![Application](Screenshots/app-browser.png)
+![Application](Screenshots/applicatioin.png)
 ### Kubernetes Pods
 ![Pods](Screenshots/pods.png)
 ### Deployment Status
-![Deployment](Screenshots/deployments.png)
+![Deployment](Screenshots/deployment.png)
 ### Kubernetes Service
 ![Service](Screenshots/service.png)
 ### Pod Health Checks & Resource Limits
-![Describe Pod](Screenshots/describe-pod.png)
+![Describe Pod](Screenshots/health&resource-pod.png)
 ### ConfigMap
 ![ConfigMap](Screenshots/configmap.png)
 ### Self-Healing Demonstration
