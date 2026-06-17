@@ -1,23 +1,65 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-app
-
+  name: flask-deployment
+  labels:
+    app: flask-app
 spec:
   replicas: 3
-
   selector:
     matchLabels:
-       app: flask-app
-
+      app: flask-app
   template:
     metadata:
       labels:
         app: flask-app
-
     spec:
       containers:
-      - name: flask-container
-        image: arsalan87/flask-k8s-project:v2
-        ports:
-        - containerPort: 5000 
+        - name: flask-app
+          image: arsalan87/flask-k8s-project:v2
+          ports:
+            - containerPort: 5000
+
+          # ── Externalized config (ConfigMap) ─────────────────────────────
+          # Instead of hardcoding values in app.py, we inject them as env vars.
+          # Change configmap.yaml and redeploy -> no image rebuild needed.
+          envFrom:
+            - configMapRef:
+                name: flask-config
+
+          # ── Resource governance ─────────────────────────────────────────
+          # requests = guaranteed minimum (used by scheduler to place the pod)
+          # limits   = hard ceiling (exceeding memory limit -> pod is OOMKilled
+          #            and restarted; exceeding CPU limit -> pod is throttled)
+          resources:
+            requests:
+              cpu: "100m"        # 0.1 vCPU guaranteed
+              memory: "64Mi"
+            limits:
+              cpu: "250m"        # max 0.25 vCPU
+              memory: "128Mi"
+
+          # ── Liveness probe ────────────────────────────────────────────────
+          # "Are you still alive?" If this fails repeatedly, Kubernetes
+          # kills and restarts the container. This is what makes
+          # self-healing work for app-level hangs/crashes, not just
+          # manual pod deletion.
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 5   # wait 5s after container starts before first check
+            periodSeconds: 10        # check every 10s
+            failureThreshold: 3      # 3 consecutive failures -> restart
+
+          # ── Readiness probe ───────────────────────────────────────────────
+          # "Are you ready for traffic?" If this fails, the pod is removed
+          # from the Service's load-balancing rotation WITHOUT being killed.
+          # Useful for slow startups or temporary overload.
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
