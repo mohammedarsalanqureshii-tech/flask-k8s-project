@@ -159,13 +159,21 @@ If a Pod is deleted, Kubernetes automatically creates a replacement Pod.
 
 ## Screenshots
 
-Add screenshots here:
+### Application Running
 
-* Kubernetes Pods Running
-* Kubernetes Service
-* Deployment Status
-* Application Running in Browser
+![Application](Screenshots/app-browser.png)
 
+### Kubernetes Pods
+
+![Pods](Screenshots/pods.png)
+
+### Deployment Status
+
+![Deployment](Screenshots/deployments.png)
+
+### Kubernetes Service
+
+![Service](Screenshots/service.png)
 ---
 
 ## Learning Outcomes
