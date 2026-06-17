@@ -1,10 +1,18 @@
 from flask import Flask
+import socket
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Hello from Arsalan's Kubernetes Project!"
+    hostname = socket.gethostname()
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    return f"""
+    <h1>Flask Kubernetes Project</h1>
+    <h2>Created by Arsalan</h2>
+    <p>This application is running inside Kubernetes.</p>
+    <p><b>Pod Name:</b> {hostname}</p>
+    """
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
