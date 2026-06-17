@@ -17,6 +17,7 @@ spec:
       containers:
         - name: flask-app
           image: arsalan87/flask-k8s-project:v2
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
 
